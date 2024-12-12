@@ -1,5 +1,6 @@
 import 'package:fintech_dashboard_clone/styles/styles.dart';
 import 'package:fintech_dashboard_clone/screens/home_page.dart';
+import 'package:fintech_dashboard_clone/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class FintechDasboardApp extends StatelessWidget {
         scaffoldBackgroundColor: Styles.scaffoldBackgroundColor,
         scrollbarTheme: Styles.scrollbarTheme,
       ),
-      home: const HomePage(),  // Use the HomePage widget from the imported file
+        home: LoginPage(),  // Remove the 'const' keyword here.
     );
   }
 }
