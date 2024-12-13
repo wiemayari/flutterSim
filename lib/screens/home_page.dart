@@ -37,10 +37,7 @@ class _HomePageState extends State<HomePage> {
                       child: ExpenseIncomeCharts(),
                     ),
                 
-                    Expanded(
-                      flex: 2,
-                      child: LatestTransactions(),
-                    ),
+                   
                   ],
                 ),
                 flex: 5,

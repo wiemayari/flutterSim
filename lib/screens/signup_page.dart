@@ -95,7 +95,7 @@ class SignUpPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        primary: Colors.indigo,
+                       // primary: Colors.indigo,
                       ),
                       child: Text(
                         'Sign Up',
