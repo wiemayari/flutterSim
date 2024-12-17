@@ -73,11 +73,10 @@ class _LatestTransactionsState extends State<LatestTransactions> {
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         roleNames = jsonData.fold<Map<String, String>>(
-            {},
-            (Map<String, String> map, role) {
-              map[role['_id']] = role['name'] ?? 'N/A';
-              return map;
-            });
+            {}, (Map<String, String> map, role) {
+          map[role['_id']] = role['name'] ?? 'N/A';
+          return map;
+        });
       } else {
         print('Failed to load roles');
       }
@@ -159,11 +158,20 @@ class _LatestTransactionsState extends State<LatestTransactions> {
       return users;
     }
     return users.where((user) {
-      return user['username'].toLowerCase().contains(searchQuery.toLowerCase()) ||
-             user['email'].toLowerCase().contains(searchQuery.toLowerCase()) ||
-             user['bio'].toLowerCase().contains(searchQuery.toLowerCase()) ||
-             roleNames[user['roleId']]!.toLowerCase().contains(searchQuery.toLowerCase());
+      return (user['username'] != null && user['username'].toLowerCase().contains(searchQuery.toLowerCase())) ||
+             (user['email'] != null && user['email'].toLowerCase().contains(searchQuery.toLowerCase())) ||
+             (user['bio'] != null && user['bio'].toLowerCase().contains(searchQuery.toLowerCase())) ||
+             (roleNames[user['roleId']] != null && roleNames[user['roleId']]!.toLowerCase().contains(searchQuery.toLowerCase()));
     }).toList();
+  }
+
+  /// Delete a user after confirming
+  Future<void> deleteUser(String userId) async {
+    // Logic to delete the user from the server (if required)
+    // For now, we just remove it from the local list
+    setState(() {
+      users.removeWhere((user) => user['_id'] == userId);
+    });
   }
 
   @override
@@ -217,18 +225,79 @@ class _LatestTransactionsState extends State<LatestTransactions> {
               rows: filteredUsers.map((user) {
                 return DataRow(
                   cells: [
-                    DataCell(Text(user['_id'] ?? 'N/A')),
+                    DataCell(
+                      Row(
+                        children: [
+                          Text(
+                            user['_id'] != null
+                                ? '${user['_id']!.substring(0, 4)}'
+                                : 'N/A',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          if (user['_id'] != null && user['_id']!.length > 4)
+                            // Apply a more intense blur effect to the rest of the id
+                            Text(
+                              user['_id']!.substring(4),
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.005),
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 5.0,
+                                    color: Colors.grey.withOpacity(0.9),
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                     DataCell(Text(user['username'] ?? 'N/A')),
                     DataCell(Text(user['email'] ?? 'N/A')),
                     DataCell(Text(user['bio'] ?? 'N/A')),
                     DataCell(Text(roleNames[user['roleId']] ?? 'N/A')),  // Show role name
                     DataCell(
-                      IconButton(
-                        icon: Icon(Icons.chat_bubble, color: Colors.blue),
-                        onPressed: () {
-                          // Fetch and display the AI responses when chat icon is clicked
-                          fetchAndShowResponses(context, user['_id']);
-                        },
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.chat_bubble, color: Colors.blue),
+                            onPressed: () {
+                              // Fetch and display the AI responses when chat icon is clicked
+                              fetchAndShowResponses(context, user['_id']);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              // Show confirmation dialog before deletion
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirm Deletion"),
+                                    content: Text("Are you sure you want to delete this user?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          deleteUser(user['_id']);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Delete"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(),
+                                        child: Text("Cancel"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],

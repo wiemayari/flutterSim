@@ -50,12 +50,7 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.only(left: Styles.defaultPadding),
                     child: Column(
                       children: [
-                        CardsSection(
-                          cardDetails: [
-                            CardDetails("431421432", CardType.mastercard),
-                            CardDetails("423142231", CardType.mastercard),
-                          ],
-                        ),
+                        
                         const Expanded(
                           child: StaticsByCategory(),
                         ),

@@ -8,6 +8,7 @@ class Styles {
   static Color defaultGreyColor = const Color(0xff77839a);
   static Color defaultLightGreyColor = const Color(0xffc4c4c4);
   static Color defaultLightWhiteColor = const Color(0xFFf2f6fe);
+  static Color defaultGrayColor = Color(0xFFBDBDBD); // par exemple, gris clair
 
   static double defaultPadding = 18.0;
 

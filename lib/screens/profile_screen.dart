@@ -74,22 +74,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20.0,
-                      horizontal: 10.0,
-                    ),
-                    child: _buildSectionContainer(
-                      context: context,
-                      child: const StaticsByCategory(),
-                      height: 400,
-                    ),
-                  ),
-                ),
-              ),
+             
             ],
           ),
         ),
